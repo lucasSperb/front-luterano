@@ -1,8 +1,18 @@
-import Login from "./components/login/Login";
-import './index.css';
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Login from './components/login/Login';
+import Dashboard from './components/dashboard/Dashboard';
 
-function App() {
-  return <Login />;
+export default function App() {
+  const token = localStorage.getItem('token');
+
+  return (
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route
+        path="/dashboard"
+        element={token ? <Dashboard /> : <Navigate to="/" />}
+      />
+    </Routes>
+  );
 }
-
-export default App;

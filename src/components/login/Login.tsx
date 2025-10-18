@@ -32,7 +32,7 @@ export default function Login() {
       const data = await response.json();
       localStorage.setItem('token', data.token);
 
-      alert('Login realizado com sucesso!');
+
       window.location.href = '/dashboard';
     } catch (err: any) {
       // Melhora a mensagem de erro
