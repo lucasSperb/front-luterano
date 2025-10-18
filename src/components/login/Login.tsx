@@ -16,7 +16,7 @@ export default function Login() {
       const API_BASE =
         (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_URL) ||
         ((globalThis as any).process?.env?.REACT_APP_API_URL) ||
-        'http://localhost:3000';
+        'https://backend-escola-hhgn.onrender.com';
 
       const response = await fetch(`${API_BASE}/api/login`, {
         method: 'POST',
