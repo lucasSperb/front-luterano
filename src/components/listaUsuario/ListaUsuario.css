@@ -1,24 +1,18 @@
 .lista-usuario-wrapper {
   padding: 20px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-}
-
-.lista-usuario-wrapper h2 {
-  margin-bottom: 15px;
-  color: #001f3f;
 }
 
 .lista-usuario-table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 15px;
 }
 
 .lista-usuario-table th,
 .lista-usuario-table td {
-  padding: 10px;
+  border: 1px solid #ddd;
+  padding: 8px;
   text-align: left;
-  border-bottom: 1px solid #ccc;
 }
 
 .lista-usuario-table th {
@@ -26,6 +20,7 @@
   color: #fff;
 }
 
-.lista-usuario-table tr:hover {
-  background-color: #e0e0e0;
+.error-message {
+  color: #ff4d4f;
+  margin-bottom: 10px;
 }

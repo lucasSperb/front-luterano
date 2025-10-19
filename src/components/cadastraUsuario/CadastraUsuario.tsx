@@ -5,48 +5,62 @@ export default function CadastraUsuario() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [tipoUsuario, setTipoUsuario] = useState("aluno");
+  const [tipo, setTipo] = useState("aluno"); // alterado de tipoUsuario para tipo
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
 
-    const novoUsuario = { nome, email, senha, tipoUsuario };
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Você precisa estar logado para cadastrar usuários.");
+      return;
+    }
+
+    const novoUsuario = { nome, email, senha, tipo }; // alterado aqui
 
     try {
       setLoading(true);
 
-      // DEBUG: verificar URL e objeto
-      console.log("Enviando usuário:", novoUsuario);
-      console.log("URL:", `${import.meta.env.VITE_API_URL}/usuarios`);
-
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/usuarios`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/usuarios`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify(novoUsuario)
       });
 
-      console.log("Resposta HTTP:", response.status, response.statusText);
-
       if (!response.ok) {
-        // Tentar pegar mensagem do backend
         const errorData = await response.json().catch(() => null);
-        throw new Error(errorData?.message || "Erro ao cadastrar usuário");
+
+        if (response.status === 409) {
+          throw new Error(errorData?.message || "Usuário já cadastrado.");
+        }
+        if (response.status === 401) {
+          throw new Error("Token inválido ou expirado. Faça login novamente.");
+        }
+
+        throw new Error(errorData?.message || `Erro ${response.status} ao cadastrar usuário`);
       }
 
       const data = await response.json();
       console.log("Usuário cadastrado:", data);
-      alert("Usuário cadastrado com sucesso!");
+      setSuccess("Usuário cadastrado com sucesso!");
 
-      // Resetar formulário somente após sucesso
+      // Resetar formulário
       setNome("");
       setEmail("");
       setSenha("");
-      setTipoUsuario("aluno");
+      setTipo("aluno");
 
-    } catch (error: any) {
-      console.error("Falha no cadastro:", error);
-      alert(`Falha ao cadastrar usuário: ${error.message}`);
+    } catch (err: any) {
+      console.error("Falha no cadastro:", err);
+      setError(err.message || "Erro desconhecido ao cadastrar usuário");
     } finally {
       setLoading(false);
     }
@@ -55,6 +69,10 @@ export default function CadastraUsuario() {
   return (
     <div className="cadastra-usuario-wrapper">
       <h2>Cadastrar Usuário</h2>
+
+      {error && <p className="error-message">{error}</p>}
+      {success && <p className="success-message">{success}</p>}
+
       <form onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="nome">Nome</label>
@@ -90,11 +108,11 @@ export default function CadastraUsuario() {
         </div>
 
         <div className="input-group">
-          <label htmlFor="tipoUsuario">Tipo de Usuário</label>
+          <label htmlFor="tipo">Tipo de Usuário</label>
           <select
-            id="tipoUsuario"
-            value={tipoUsuario}
-            onChange={e => setTipoUsuario(e.target.value)}
+            id="tipo"
+            value={tipo}
+            onChange={e => setTipo(e.target.value)}
           >
             <option value="aluno">Aluno</option>
             <option value="professor">Professor</option>
