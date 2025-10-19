@@ -44,3 +44,21 @@
   background-color: #004080;
   color: #fff;
 }
+
+.submenu {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+  gap: 5px;
+  max-height: 0;           
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.submenu-visible {
+  max-height: 500px;     
+  opacity: 1;
+  transform: translateY(0);
+}

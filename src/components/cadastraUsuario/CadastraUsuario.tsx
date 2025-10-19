@@ -9,22 +9,9 @@ export default function CadastraUsuario() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const novoUsuario = {
-      nome,
-      email,
-      senha,
-      tipoUsuario,
-    };
-
-    console.log("Usuário cadastrado:", novoUsuario);
+    console.log("Usuário cadastrado:", { nome, email, senha, tipoUsuario });
     alert("Usuário cadastrado com sucesso!");
-
-    // Resetar formulário
-    setNome("");
-    setEmail("");
-    setSenha("");
-    setTipoUsuario("aluno");
+    setNome(""); setEmail(""); setSenha(""); setTipoUsuario("aluno");
   };
 
   return (
@@ -33,44 +20,22 @@ export default function CadastraUsuario() {
       <form onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="nome">Nome</label>
-          <input
-            type="text"
-            id="nome"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            required
-          />
+          <input type="text" id="nome" value={nome} onChange={e => setNome(e.target.value)} required />
         </div>
 
         <div className="input-group">
           <label htmlFor="email">E-mail</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <input type="email" id="email" value={email} onChange={e => setEmail(e.target.value)} required />
         </div>
 
         <div className="input-group">
           <label htmlFor="senha">Senha</label>
-          <input
-            type="password"
-            id="senha"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            required
-          />
+          <input type="password" id="senha" value={senha} onChange={e => setSenha(e.target.value)} required />
         </div>
 
         <div className="input-group">
           <label htmlFor="tipoUsuario">Tipo de Usuário</label>
-          <select
-            id="tipoUsuario"
-            value={tipoUsuario}
-            onChange={(e) => setTipoUsuario(e.target.value)}
-          >
+          <select id="tipoUsuario" value={tipoUsuario} onChange={e => setTipoUsuario(e.target.value)}>
             <option value="aluno">Aluno</option>
             <option value="professor">Professor</option>
             <option value="admin">Administrador</option>

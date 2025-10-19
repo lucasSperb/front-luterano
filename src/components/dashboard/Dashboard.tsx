@@ -4,14 +4,31 @@ import CadastraUsuario from "../cadastraUsuario/CadastraUsuario";
 import "./Dashboard.css";
 
 export default function Dashboard() {
-  const [activeMenu, setActiveMenu] = useState("usuario");
+  const [activeMenu, setActiveMenu] = useState<string>(""); 
+  const [activeSubmenu, setActiveSubmenu] = useState<string>("");
+
+  const renderContent = () => {
+    if (activeMenu === "usuario") {
+      switch (activeSubmenu) {
+        case "cadastrar":
+          return <CadastraUsuario />;
+        default:
+
+      }
+    }
+
+  };
 
   return (
-    <div className="dashboard-wrapper">
-      <Sidebar active={activeMenu} />
-
-      <div className="dashboard-content">
-        {activeMenu === "usuario" && <CadastraUsuario />}
+    <div className="dashboard-wrapper" style={{ display: "flex" }}>
+      <Sidebar 
+        activeMenu={activeMenu} 
+        activeSubmenu={activeSubmenu} 
+        onSelectMenu={setActiveMenu} 
+        onSelectSubmenu={setActiveSubmenu} 
+      />
+      <div className="dashboard-content" style={{ flex: 1, padding: "20px" }}>
+        {renderContent()}
       </div>
     </div>
   );
