@@ -32,7 +32,7 @@ export default function Sidebar({ activeMenu, activeSubmenu, onSelectMenu, onSel
           👤 Usuário
         </a>
 
-        <div className={`submenu ${showUsuarioSubmenu ? 'submenu-visible' : ''}`}>
+       <div className={`submenu ${showUsuarioSubmenu ? 'submenu-visible' : ''}`}>
           <a
             href="#"
             className={activeSubmenu === 'cadastrar' ? 'active' : ''}
@@ -40,7 +40,15 @@ export default function Sidebar({ activeMenu, activeSubmenu, onSelectMenu, onSel
           >
             Cadastrar Usuário
           </a>
+          <a
+            href="#"
+            className={activeSubmenu === 'listar' ? 'active' : ''}
+            onClick={(e) => { e.preventDefault(); onSelectSubmenu('listar'); }}
+          >
+            Listar Usuários
+          </a>
         </div>
+
       </nav>
     </aside>
   );

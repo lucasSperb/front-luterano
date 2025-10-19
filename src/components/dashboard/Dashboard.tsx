@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../sidebar/Sidebar";
 import CadastraUsuario from "../cadastraUsuario/CadastraUsuario";
+import ListaUsuario from "../listaUsuario/ListaUsuario";
 import "./Dashboard.css";
 
 export default function Dashboard() {
@@ -12,11 +13,12 @@ export default function Dashboard() {
       switch (activeSubmenu) {
         case "cadastrar":
           return <CadastraUsuario />;
+        case "listar":
+          return <ListaUsuario />;
         default:
-
       }
     }
-
+   
   };
 
   return (
