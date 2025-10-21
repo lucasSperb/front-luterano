@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 export default function Login() {
@@ -7,18 +8,18 @@ export default function Login() {
   const [erro, setErro] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErro(null);
     setLoading(true);
 
     try {
-      const API_BASE =
-        (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_URL) ||
-        ((globalThis as any).process?.env?.REACT_APP_API_URL) ||
-        'https://backend-escola-hhgn.onrender.com';
+      // URL base da API (Vite env ou fallback)
+      const API_BASE = import.meta.env.VITE_API_URL || 'https://backend-escola-hhgn.onrender.com';
 
-      const response = await fetch(`${API_BASE}/api/login`, {
+      const response = await fetch(`${API_BASE}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, senha }),
@@ -30,17 +31,17 @@ export default function Login() {
       }
 
       const data = await response.json();
+
+      // Salva token no localStorage
       localStorage.setItem('token', data.token);
 
-
-      window.location.href = '/dashboard';
+      // Navegação SPA para dashboard
+      navigate('/dashboard');
     } catch (err: any) {
-      // Melhora a mensagem de erro
       const mensagemErro =
         err?.message?.includes('Failed to fetch')
           ? 'Não foi possível conectar ao servidor. Verifique sua conexão ou se a API está rodando.'
           : err.message || 'Erro ao tentar logar.';
-
       setErro(mensagemErro);
     } finally {
       setLoading(false);
@@ -82,7 +83,6 @@ export default function Login() {
           </button>
         </form>
 
-        {/* Bloco visual de erro */}
         {erro && (
           <div className="error-box">
             <span className="error-icon">⚠️</span>
