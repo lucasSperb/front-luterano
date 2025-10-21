@@ -19,7 +19,7 @@ export default function Login() {
     try {
       const API_BASE = import.meta.env.VITE_API_URL || 'https://backend-escola-hhgn.onrender.com';
 
-      const response = await fetch(`${API_BASE}/login`, {
+      const response = await fetch(`${API_BASE}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, senha }),
