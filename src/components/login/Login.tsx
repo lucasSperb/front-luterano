@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logoPaz from '../images/logoPaz.avif';
+import logoPaz from '../../images/logoPaz.avif';
 import './Login.css';
 
 export default function Login() {
