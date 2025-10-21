@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Sidebar from "../sidebar/Sidebar";
 import CadastraUsuario from "../cadastraUsuario/CadastraUsuario";
 import ListaUsuario from "../listaUsuario/ListaUsuario";
