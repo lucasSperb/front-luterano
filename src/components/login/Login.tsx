@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import logoPaz from '../images/logoPaz.avif';
 import './Login.css';
 
 export default function Login() {
@@ -16,7 +17,6 @@ export default function Login() {
     setLoading(true);
 
     try {
-      // URL base da API (Vite env ou fallback)
       const API_BASE = import.meta.env.VITE_API_URL || 'https://backend-escola-hhgn.onrender.com';
 
       const response = await fetch(`${API_BASE}/login`, {
@@ -32,10 +32,8 @@ export default function Login() {
 
       const data = await response.json();
 
-      // Salva token no localStorage
       localStorage.setItem('token', data.token);
 
-      // Navegação SPA para dashboard
       navigate('/dashboard');
     } catch (err: any) {
       const mensagemErro =
@@ -51,7 +49,7 @@ export default function Login() {
   return (
     <div className="login-wrapper">
       <div className="login-card">
-        <img src="src/images/logoPaz.avif" alt="Logo da Escola" />
+       <img src={logoPaz} alt="Logo da Escola" />
 
         <form onSubmit={handleLogin}>
           <div className="input-group">
