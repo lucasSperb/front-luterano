@@ -2,15 +2,18 @@
   max-width: 500px;
   margin: 50px auto;
   padding: 25px;
-  background-color: #f9fafb;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
 
 h2 {
   text-align: center;
-  margin-bottom: 20px;
-  color: #111827;
+  margin-bottom: 25px;
+  color: #1e293b;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .input-group {
@@ -22,20 +25,24 @@ h2 {
 .input-group label {
   margin-bottom: 5px;
   font-weight: 500;
+  color: #374151;
 }
 
 .input-group input,
 .input-group select {
   padding: 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 5px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
   font-size: 1rem;
   outline: none;
+  background-color: #f9fafb;
+  transition: border-color 0.2s, background-color 0.2s;
 }
 
 .input-group input:focus,
 .input-group select:focus {
-  border-color: #1e3a8a; /* azul escuro */
+  border-color: #1e3a8a;
+  background-color: #ffffff;
 }
 
 button {
@@ -46,20 +53,49 @@ button {
   border: none;
   border-radius: 6px;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.25s ease;
+  margin-top: 10px;
 }
 
 button:hover {
-  background-color: #111e5b;
+  background-color: #14246b;
 }
 
 .error-message {
-  color: #ff4d4f;
-  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ffe5e5;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+  border-left: 5px solid #ef4444;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.1);
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
 }
 
 .success-message {
-  color: #52c41a;
-  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+  border-left: 5px solid #10b981;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.1);
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
