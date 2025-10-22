@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logoPaz from '../../images/logoPaz.avif';
 import './Login.css';
@@ -10,6 +10,13 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setEmail('');
+    setSenha('');
+    setErro(null);
+    setLoading(false);
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +40,6 @@ export default function Login() {
       const data = await response.json();
 
       localStorage.setItem('token', data.token);
-
       navigate('/dashboard');
     } catch (err: any) {
       const mensagemErro =
@@ -49,7 +55,7 @@ export default function Login() {
   return (
     <div className="login-wrapper">
       <div className="login-card">
-       <img src={logoPaz} alt="Logo da Escola" />
+        <img src={logoPaz} alt="Logo da Escola" />
 
         <form onSubmit={handleLogin}>
           <div className="input-group">
