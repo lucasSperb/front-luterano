@@ -17,30 +17,45 @@ export default function Sidebar({
   onSelectSubmenu,
 }: SidebarProps) {
   const [showUsuarioSubmenu, setShowUsuarioSubmenu] = React.useState(false);
-  const [showConfigSubmenu, setShowConfigSubmenu] = React.useState(false);
+  const [showConfiguracoesSubmenu, setShowConfiguracoesSubmenu] = React.useState(false);
+
   const navigate = useNavigate();
 
   const handleUsuarioClick = () => {
     onSelectMenu('usuario');
     setShowUsuarioSubmenu((prev) => !prev);
-    setShowConfigSubmenu(false);
+    setShowConfiguracoesSubmenu(false);
   };
 
-  const handleConfigClick = () => {
+  const handleConfiguracoesClick = () => {
     onSelectMenu('configuracoes');
-    setShowConfigSubmenu((prev) => !prev);
+    setShowConfiguracoesSubmenu((prev) => !prev);
     setShowUsuarioSubmenu(false);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    localStorage.setItem('clearLoginFields', 'true'); 
-    navigate('/'); 
+    navigate('/');
+  };
+
+  const handleLogoClick = () => {
+    setShowUsuarioSubmenu(false);
+    setShowConfiguracoesSubmenu(false);
+
+    onSelectMenu('');
+    onSelectSubmenu('');
+
+    navigate('/dashboard');
   };
 
   return (
     <aside className="sidebar">
-      <div className="logo-section">
+      <div
+        className="logo-section"
+        onClick={handleLogoClick}
+        style={{ cursor: 'pointer' }}
+        title="Voltar ao Dashboard"
+      >
         <img src={logo} className="logo" alt="Logo da Escola" />
       </div>
 
@@ -84,13 +99,13 @@ export default function Sidebar({
           className={activeMenu === 'configuracoes' ? 'active' : ''}
           onClick={(e) => {
             e.preventDefault();
-            handleConfigClick();
+            handleConfiguracoesClick();
           }}
         >
           ⚙️ Configurações
         </a>
 
-        <div className={`submenu ${showConfigSubmenu ? 'submenu-visible' : ''}`}>
+        <div className={`submenu ${showConfiguracoesSubmenu ? 'submenu-visible' : ''}`}>
           <a
             href="#"
             onClick={(e) => {
