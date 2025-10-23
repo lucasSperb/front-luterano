@@ -32,7 +32,6 @@ export default function Sidebar({
     setShowConfiguracoesSubmenu((prev) => !prev);
     setShowUsuarioSubmenu(false);
   };
-
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/');
