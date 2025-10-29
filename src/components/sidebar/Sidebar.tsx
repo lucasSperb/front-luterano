@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 import logo from '../../images/logoPaz.avif';
@@ -16,34 +16,30 @@ export default function Sidebar({
   onSelectMenu,
   onSelectSubmenu,
 }: SidebarProps) {
-  const [showUsuarioSubmenu, setShowUsuarioSubmenu] = React.useState(false);
-  const [showConfiguracoesSubmenu, setShowConfiguracoesSubmenu] = React.useState(false);
-
   const navigate = useNavigate();
 
-  const handleUsuarioClick = () => {
-    onSelectMenu('usuario');
-    setShowUsuarioSubmenu((prev) => !prev);
-    setShowConfiguracoesSubmenu(false);
+  // Estado único: apenas um menu aberto por vez
+  const [menuAberto, setMenuAberto] = useState<string | null>(null);
+
+  const toggleMenu = (menu: string) => {
+    if (menuAberto === menu) {
+      setMenuAberto(null); // Fecha se clicar no mesmo menu
+      onSelectMenu('');
+    } else {
+      setMenuAberto(menu);
+      onSelectMenu(menu);
+    }
   };
 
-  const handleConfiguracoesClick = () => {
-    onSelectMenu('configuracoes');
-    setShowConfiguracoesSubmenu((prev) => !prev);
-    setShowUsuarioSubmenu(false);
-  };
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/');
   };
 
   const handleLogoClick = () => {
-    setShowUsuarioSubmenu(false);
-    setShowConfiguracoesSubmenu(false);
-
     onSelectMenu('');
     onSelectSubmenu('');
-
+    setMenuAberto(null);
     navigate('/dashboard');
   };
 
@@ -59,18 +55,19 @@ export default function Sidebar({
       </div>
 
       <nav className="menu">
+
+        {/* MENU USUÁRIO */}
         <a
           href="#"
           className={activeMenu === 'usuario' ? 'active' : ''}
           onClick={(e) => {
             e.preventDefault();
-            handleUsuarioClick();
+            toggleMenu('usuario');
           }}
         >
           👤 Usuário
         </a>
-
-        <div className={`submenu ${showUsuarioSubmenu ? 'submenu-visible' : ''}`}>
+        <div className={`submenu ${menuAberto === 'usuario' ? 'submenu-visible' : ''}`}>
           <a
             href="#"
             className={activeSubmenu === 'cadastrar' ? 'active' : ''}
@@ -93,18 +90,29 @@ export default function Sidebar({
           </a>
         </div>
 
+        {/* MENU CONFIGURAÇÕES */}
         <a
           href="#"
           className={activeMenu === 'configuracoes' ? 'active' : ''}
           onClick={(e) => {
             e.preventDefault();
-            handleConfiguracoesClick();
+            toggleMenu('configuracoes');
           }}
         >
           ⚙️ Configurações
         </a>
+        <div className={`submenu ${menuAberto === 'configuracoes' ? 'submenu-visible' : ''}`}>
+          <a
+            href="#"
+            className={activeSubmenu === 'cadastrar_escola' ? 'active' : ''}
+            onClick={(e) => {
+              e.preventDefault();
+              onSelectSubmenu('cadastrar_escola');
+            }}
+          >
+            🏫 Cadastrar Escola
+          </a>
 
-        <div className={`submenu ${showConfiguracoesSubmenu ? 'submenu-visible' : ''}`}>
           <a
             href="#"
             onClick={(e) => {

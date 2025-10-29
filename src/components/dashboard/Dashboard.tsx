@@ -2,6 +2,7 @@ import { useState } from "react";
 import Sidebar from "../sidebar/Sidebar";
 import CadastraUsuario from "../cadastraUsuario/CadastraUsuario";
 import ListaUsuario from "../listaUsuario/ListaUsuario";
+import CadastraEscola from "../cadastraEscola/CadastraEscola";
 import "./Dashboard.css";
 
 export default function Dashboard() {
@@ -16,9 +17,20 @@ export default function Dashboard() {
         case "listar":
           return <ListaUsuario />;
         default:
+          return null;
       }
     }
-   
+
+    if (activeMenu === "configuracoes") {
+      switch (activeSubmenu) {
+        case "cadastrar_escola":
+          return <CadastraEscola />;
+        default:
+          return null;
+      }
+    }
+
+    return null;
   };
 
   return (
