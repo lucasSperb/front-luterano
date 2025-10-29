@@ -5,87 +5,167 @@ interface Usuario {
   id: number;
   nome: string;
   email: string;
-  tipo: string; 
+  tipo: string;
+  id_tipo_usuario: number;
+}
+
+interface TipoUsuario {
+  id: number;
+  nome: string;
 }
 
 export default function ListaUsuario() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [tipos, setTipos] = useState<TipoUsuario[]>([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [usuarioEditar, setUsuarioEditar] = useState<Usuario | null>(null);
+  const [modalAberto, setModalAberto] = useState(false);
 
   const fetchUsuarios = async () => {
     setLoading(true);
     setError(null);
-
     const token = localStorage.getItem("token");
     if (!token) {
       setError("Você precisa estar logado para ver a lista de usuários.");
       setLoading(false);
       return;
     }
-
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/usuarios`, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
       });
-
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-
-        if (response.status === 401) {
-          throw new Error("Token inválido ou expirado. Faça login novamente.");
-        }
-
-        throw new Error(errorData?.message || `Erro ${response.status} ao buscar usuários`);
+        const data = await response.json().catch(() => null);
+        if (response.status === 401) throw new Error("Token inválido ou expirado. Faça login novamente.");
+        throw new Error(data?.message || `Erro ${response.status} ao buscar usuários`);
       }
-
       const data = await response.json();
-
-      if (Array.isArray(data)) {
-        setUsuarios(data);
-      } else if (data.usuarios && Array.isArray(data.usuarios)) {
-        setUsuarios(data.usuarios);
-      } else {
-        throw new Error("Formato de resposta inválido da API");
-      }
-
+      setUsuarios(Array.isArray(data) ? data : data.usuarios || []);
     } catch (err: any) {
-      console.error("Erro ao buscar usuários:", err);
       setError(err.message || "Erro desconhecido ao buscar usuários");
     } finally {
       setLoading(false);
     }
   };
 
+  const fetchTipos = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/tipousuarios`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error("Erro ao buscar tipos de usuário");
+      const data = await response.json();
+      setTipos(data);
+    } catch (err) {}
+  };
+
   useEffect(() => {
     fetchUsuarios();
+    fetchTipos();
   }, []);
+
+  const abrirModal = (usuario: Usuario) => {
+    setUsuarioEditar(usuario);
+    setModalAberto(true);
+  };
+
+  const fecharModal = () => {
+    setUsuarioEditar(null);
+    setModalAberto(false);
+  };
+
+  const handleSalvar = async () => {
+    if (!usuarioEditar) return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/usuarios/${usuarioEditar.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify(usuarioEditar),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.message || `Erro ${response.status} ao atualizar usuário`);
+      }
+      fetchUsuarios();
+      fecharModal();
+    } catch (err: any) {
+      alert(err.message || "Erro ao atualizar usuário");
+    }
+  };
 
   return (
     <div className="lista-usuario-wrapper">
       <h2>Lista de Usuários</h2>
-
       {loading && <p>Carregando usuários...</p>}
       {error && <p className="error-message">{error}</p>}
       {!loading && !error && usuarios.length === 0 && <p>Nenhum usuário encontrado.</p>}
-
       {!loading && !error && usuarios.length > 0 && (
         <table className="lista-usuario-table">
           <thead>
             <tr>
-              <th>Nome</th><th>E-mail</th><th>Tipo</th>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>Tipo</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
             {usuarios.map(u => (
-              <tr key={u.id}><td>{u.nome}</td><td>{u.email}</td><td>{u.tipo}</td></tr>
+              <tr key={u.id}>
+                <td>{u.nome}</td>
+                <td>{u.email}</td>
+                <td>{u.tipo}</td>
+                <td style={{ textAlign: "center" }}>
+                  <button className="btn-editar-pequeno" onClick={() => abrirModal(u)}>✏️</button>
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>
+      )}
+      {modalAberto && usuarioEditar && (
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ width: "400px" }}>
+            <h3>Editar Usuário</h3>
+            <div className="input-group">
+              <label>Nome</label>
+              <input
+                type="text"
+                value={usuarioEditar.nome}
+                onChange={(e) => setUsuarioEditar({ ...usuarioEditar, nome: e.target.value })}
+              />
+            </div>
+            <div className="input-group">
+              <label>E-mail</label>
+              <input
+                type="email"
+                value={usuarioEditar.email}
+                onChange={(e) => setUsuarioEditar({ ...usuarioEditar, email: e.target.value })}
+              />
+            </div>
+            <div className="input-group">
+              <label>Tipo</label>
+              <select
+                value={usuarioEditar.id_tipo_usuario || ""}
+                onChange={(e) => setUsuarioEditar({ ...usuarioEditar, id_tipo_usuario: Number(e.target.value) })}
+              >
+                {tipos.map(t => (
+                  <option key={t.id} value={t.id}>{t.nome}</option>
+                ))}
+              </select>
+            </div>
+            <div className="modal-buttons">
+              <button className="btn-primary" onClick={handleSalvar}>Salvar</button>
+              <button className="btn-secondary" onClick={fecharModal}>Cancelar</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
