@@ -22,6 +22,8 @@ export default function ListaUsuario() {
   const [usuarioEditar, setUsuarioEditar] = useState<Usuario | null>(null);
   const [modalAberto, setModalAberto] = useState(false);
   const [ordemNomeAsc, setOrdemNomeAsc] = useState<boolean | null>(null);
+  const [busca, setBusca] = useState("");
+  const [filtroTipo, setFiltroTipo] = useState("");
 
   const fetchUsuarios = async () => {
     setLoading(true);
@@ -100,10 +102,9 @@ export default function ListaUsuario() {
     }
   };
 
-  // 🔽 Função de ordenação por nome
   const ordenarPorNome = () => {
     if (usuarios.length === 0) return;
-    const novaOrdem = ordemNomeAsc === null ? true : !ordemNomeAsc; // alterna entre asc e desc
+    const novaOrdem = ordemNomeAsc === null ? true : !ordemNomeAsc;
     setOrdemNomeAsc(novaOrdem);
 
     const ordenado = [...usuarios].sort((a, b) => {
@@ -115,12 +116,44 @@ export default function ListaUsuario() {
     setUsuarios(ordenado);
   };
 
+
+  const usuariosFiltrados = usuarios.filter(u => {
+    const buscaMatch =
+      u.nome.toLowerCase().includes(busca.toLowerCase()) ||
+      u.email.toLowerCase().includes(busca.toLowerCase());
+    const tipoMatch = filtroTipo ? u.tipo === filtroTipo : true;
+    return buscaMatch && tipoMatch;
+  });
+
   return (
     <div className="lista-usuario-wrapper">
+
+      <div className="filtros-container">
+        <input
+          className="busca"
+          type="text"
+          placeholder="Buscar por nome ou e-mail..."
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+        />
+
+        <select
+          className="filtro-tipo" 
+          value={filtroTipo}
+          onChange={(e) => setFiltroTipo(e.target.value)}
+        >
+          <option value="">Todos os tipos</option>
+          {tipos.map((t) => (
+            <option key={t.id} value={t.nome}>{t.nome}</option>
+          ))}
+        </select>
+      </div>
+
       {loading && <p>Carregando usuários...</p>}
       {error && <p className="error-message">{error}</p>}
-      {!loading && !error && usuarios.length === 0 && <p>Nenhum usuário encontrado.</p>}
-      {!loading && !error && usuarios.length > 0 && (
+      {!loading && !error && usuariosFiltrados.length === 0 && <p>Nenhum usuário encontrado.</p>}
+
+      {!loading && !error && usuariosFiltrados.length > 0 && (
         <table className="lista-usuario-table">
           <thead>
             <tr>
@@ -133,7 +166,7 @@ export default function ListaUsuario() {
             </tr>
           </thead>
           <tbody>
-            {usuarios.map(u => (
+            {usuariosFiltrados.map(u => (
               <tr key={u.id}>
                 <td>{u.nome}</td>
                 <td>{u.email}</td>
@@ -146,9 +179,10 @@ export default function ListaUsuario() {
           </tbody>
         </table>
       )}
+
       {modalAberto && usuarioEditar && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{ width: "400px" }}>
+          <div className="modal-content">
             <h3>Editar Usuário</h3>
             <div className="input-group">
               <label>Nome</label>
