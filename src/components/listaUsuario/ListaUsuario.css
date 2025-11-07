@@ -79,3 +79,82 @@
 .lista-usuario-table td.acao {
   text-align: center; 
 }
+
+.lista-usuario-wrapper {
+  padding: 20px;
+}
+
+.lista-usuario-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.lista-usuario-table th,
+.lista-usuario-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.lista-usuario-table th {
+  background-color: #001f3f;
+  color: #fff;
+}
+
+.error-message {
+  color: #ff4d4f;
+  margin-bottom: 10px;
+}
+
+.btn-editar-pequeno {
+  width: 60%;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  border: 1px solid #004080;
+  background-color: #cfd8dc;
+  cursor: pointer;
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable:hover {
+  background-color: #003366;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  width: 450px;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

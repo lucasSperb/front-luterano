@@ -21,6 +21,7 @@ export default function ListaUsuario() {
   const [error, setError] = useState<string | null>(null);
   const [usuarioEditar, setUsuarioEditar] = useState<Usuario | null>(null);
   const [modalAberto, setModalAberto] = useState(false);
+  const [ordemNomeAsc, setOrdemNomeAsc] = useState<boolean | null>(null);
 
   const fetchUsuarios = async () => {
     setLoading(true);
@@ -99,9 +100,23 @@ export default function ListaUsuario() {
     }
   };
 
+  // 🔽 Função de ordenação por nome
+  const ordenarPorNome = () => {
+    if (usuarios.length === 0) return;
+    const novaOrdem = ordemNomeAsc === null ? true : !ordemNomeAsc; // alterna entre asc e desc
+    setOrdemNomeAsc(novaOrdem);
+
+    const ordenado = [...usuarios].sort((a, b) => {
+      if (a.nome.toLowerCase() < b.nome.toLowerCase()) return novaOrdem ? -1 : 1;
+      if (a.nome.toLowerCase() > b.nome.toLowerCase()) return novaOrdem ? 1 : -1;
+      return 0;
+    });
+
+    setUsuarios(ordenado);
+  };
+
   return (
     <div className="lista-usuario-wrapper">
-      <h2>Lista de Usuários</h2>
       {loading && <p>Carregando usuários...</p>}
       {error && <p className="error-message">{error}</p>}
       {!loading && !error && usuarios.length === 0 && <p>Nenhum usuário encontrado.</p>}
@@ -109,7 +124,9 @@ export default function ListaUsuario() {
         <table className="lista-usuario-table">
           <thead>
             <tr>
-              <th>Nome</th>
+              <th className="sortable" onClick={ordenarPorNome}>
+                Nome {ordemNomeAsc === null ? "" : ordemNomeAsc ? "▲" : "▼"}
+              </th>
               <th>E-mail</th>
               <th>Tipo</th>
               <th>Ações</th>
