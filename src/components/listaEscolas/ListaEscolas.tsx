@@ -6,7 +6,6 @@ export default function ListaEscolas() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [fNome, setFNome] = useState("");
   const [fCnpj, setFCnpj] = useState("");
   const [fEndereco, setFEndereco] = useState("");
 
@@ -47,7 +46,7 @@ export default function ListaEscolas() {
     const cnpjLimpo = e.cnpj.replace(/\D/g, "");
     const filtrCnpjLimpo = fCnpj.replace(/\D/g, "");
     return (
-      e.nome.toLowerCase().includes(fNome.toLowerCase()) &&
+      e.nome.toLowerCase().includes("") &&
       cnpjLimpo.includes(filtrCnpjLimpo) &&
       e.endereco.toLowerCase().includes(fEndereco.toLowerCase())
     );
