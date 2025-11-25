@@ -1,0 +1,45 @@
+.lista-escolas-wrapper {
+  padding: 20px;
+}
+
+.lista-escolas-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.lista-escolas-table th,
+.lista-escolas-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.lista-escolas-table th {
+  background-color: #001f3f;
+  color: #fff;
+}
+
+.error-message {
+  color: #ff4d4f;
+  margin-bottom: 10px;
+}
+
+.filtros-escolas {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.filtros-escolas input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.BuscaEscola:focus {
+    border-color: #1e3a8a;
+    background-color: #ffffff;
+    outline: none;
+}

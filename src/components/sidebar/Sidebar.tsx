@@ -17,17 +17,17 @@ export default function Sidebar({
   onSelectSubmenu,
 }: SidebarProps) {
   const navigate = useNavigate();
-
-  // Estado único: apenas um menu aberto por vez
   const [menuAberto, setMenuAberto] = useState<string | null>(null);
 
   const toggleMenu = (menu: string) => {
     if (menuAberto === menu) {
-      setMenuAberto(null); // Fecha se clicar no mesmo menu
+      setMenuAberto(null);
       onSelectMenu('');
+      onSelectSubmenu('');
     } else {
       setMenuAberto(menu);
       onSelectMenu(menu);
+      onSelectSubmenu('');
     }
   };
 
@@ -56,14 +56,10 @@ export default function Sidebar({
 
       <nav className="menu">
 
-        {/* MENU USUÁRIO */}
         <a
           href="#"
           className={activeMenu === 'usuario' ? 'active' : ''}
-          onClick={(e) => {
-            e.preventDefault();
-            toggleMenu('usuario');
-          }}
+          onClick={(e) => { e.preventDefault(); toggleMenu('usuario'); }}
         >
           👤 Usuário
         </a>
@@ -71,54 +67,56 @@ export default function Sidebar({
           <a
             href="#"
             className={activeSubmenu === 'cadastrar' ? 'active' : ''}
-            onClick={(e) => {
-              e.preventDefault();
-              onSelectSubmenu('cadastrar');
-            }}
+            onClick={(e) => { e.preventDefault(); onSelectMenu('usuario'); onSelectSubmenu('cadastrar'); }}
           >
             Cadastrar Usuário
           </a>
+
           <a
             href="#"
             className={activeSubmenu === 'listar' ? 'active' : ''}
-            onClick={(e) => {
-              e.preventDefault();
-              onSelectSubmenu('listar');
-            }}
+            onClick={(e) => { e.preventDefault(); onSelectMenu('usuario'); onSelectSubmenu('listar'); }}
           >
             Listar Usuários
           </a>
         </div>
 
-        {/* MENU CONFIGURAÇÕES */}
+        <a
+          href="#"
+          className={activeMenu === 'escolas' ? 'active' : ''}
+          onClick={(e) => { e.preventDefault(); toggleMenu('escolas'); }}
+        >
+          🏫 Escolas
+        </a>
+        <div className={`submenu ${menuAberto === 'escolas' ? 'submenu-visible' : ''}`}>
+          <a
+            href="#"
+            className={activeSubmenu === 'cadastrar_escola' ? 'active' : ''}
+            onClick={(e) => { e.preventDefault(); onSelectMenu('escolas'); onSelectSubmenu('cadastrar_escola'); }}
+          >
+            Cadastrar Escola
+          </a>
+
+          <a
+            href="#"
+            className={activeSubmenu === 'listar_escolas' ? 'active' : ''}
+            onClick={(e) => { e.preventDefault(); onSelectMenu('escolas'); onSelectSubmenu('listar_escolas'); }}
+          >
+            Listar Escolas
+          </a>
+        </div>
+
         <a
           href="#"
           className={activeMenu === 'configuracoes' ? 'active' : ''}
-          onClick={(e) => {
-            e.preventDefault();
-            toggleMenu('configuracoes');
-          }}
+          onClick={(e) => { e.preventDefault(); toggleMenu('configuracoes'); }}
         >
           ⚙️ Configurações
         </a>
         <div className={`submenu ${menuAberto === 'configuracoes' ? 'submenu-visible' : ''}`}>
           <a
             href="#"
-            className={activeSubmenu === 'cadastrar_escola' ? 'active' : ''}
-            onClick={(e) => {
-              e.preventDefault();
-              onSelectSubmenu('cadastrar_escola');
-            }}
-          >
-            🏫 Cadastrar Escola
-          </a>
-
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              handleLogout();
-            }}
+            onClick={(e) => { e.preventDefault(); handleLogout(); }}
           >
             🚪 Sair
           </a>

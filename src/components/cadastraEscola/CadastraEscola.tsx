@@ -54,49 +54,60 @@ export default function CadastraEscola() {
 
   return (
     <div className="cadastra-escola-wrapper">
-      <h2>Cadastrar Escola</h2>
+      <div className="card-escola">
+        <h2>Cadastrar Escola</h2>
 
-      {error && <p className="error-message">{error}</p>}
-      {success && <p className="success-message">{success}</p>}
+        {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">{success}</p>}
 
-      <form onSubmit={handleSubmit}>
-        <div className="input-group">
-          <label htmlFor="nome">Nome</label>
-          <input
-            type="text"
-            id="nome"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label htmlFor="nome">Nome</label>
+            <input
+              type="text"
+              id="nome"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              required
+            />
+          </div>
 
-        <div className="input-group">
-          <label htmlFor="cnpj">CNPJ</label>
-          <input
-            type="text"
-            id="cnpj"
-            value={cnpj}
-            onChange={(e) => setCnpj(e.target.value)}
-            required
-          />
-        </div>
+          <div className="input-group">
+            <label htmlFor="cnpj">CNPJ</label>
+            <input
+              type="text"
+              id="cnpj"
+              value={cnpj}
+              onChange={(e) => {
+                let v = e.target.value.replace(/\D/g, "");
+                v = v.replace(/^(\d{2})(\d)/, "$1.$2");
+                v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+                v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
+                v = v.replace(/(\d{4})(\d)/, "$1-$2");
+                if (v.length > 18) v = v.substring(0, 18);
+                setCnpj(v);
+              }}
+              required
+            />
 
-        <div className="input-group">
-          <label htmlFor="endereco">Endereço</label>
-          <input
-            type="text"
-            id="endereco"
-            value={endereco}
-            onChange={(e) => setEndereco(e.target.value)}
-            required
-          />
-        </div>
+          </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Cadastrando..." : "Cadastrar Escola"}
-        </button>
-      </form>
+          <div className="input-group">
+            <label htmlFor="endereco">Endereço</label>
+            <input
+              type="text"
+              id="endereco"
+              value={endereco}
+              onChange={(e) => setEndereco(e.target.value)}
+              required
+            />
+          </div>
+
+          <button type="submit" disabled={loading}>
+            {loading ? "Cadastrando..." : "Cadastrar Escola"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import Sidebar from "../sidebar/Sidebar";
 import CadastraUsuario from "../cadastraUsuario/CadastraUsuario";
 import ListaUsuario from "../listaUsuario/ListaUsuario";
 import CadastraEscola from "../cadastraEscola/CadastraEscola";
+import ListaEscolas from "../listaEscolas/ListaEscolas";
 import "./Dashboard.css";
 
 export default function Dashboard() {
@@ -21,13 +22,19 @@ export default function Dashboard() {
       }
     }
 
-    if (activeMenu === "configuracoes") {
+    if (activeMenu === "escolas") {
       switch (activeSubmenu) {
         case "cadastrar_escola":
           return <CadastraEscola />;
+        case "listar_escolas":
+          return <ListaEscolas />;
         default:
           return null;
       }
+    }
+
+    if (activeMenu === "configuracoes") {
+      return null;
     }
 
     return null;

@@ -1,45 +1,77 @@
 .cadastra-escola-wrapper {
-  max-width: 600px;
-  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.card-escola {
+  background: #fff;
+  padding: 25px;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.card-escola h2 {
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .input-group {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 15px;
 }
 
 .input-group label {
-  display: block;
   margin-bottom: 5px;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .input-group input {
-  width: 100%;
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  padding: 10px;
+  border: 1px solid #c5c5c5;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 5px rgba(25,118,210,0.3);
 }
 
 button {
-  padding: 10px 15px;
-  border-radius: 5px;
-  border: none;
-  background-color: #001f3f;
+  width: 100%;
+  padding: 12px;
+  background: #001f3f;
   color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
   cursor: pointer;
 }
 
 button:disabled {
-  background-color: #ccc;
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
 .error-message {
-  color: red;
+  color: #d32f2f;
+  text-align: center;
   margin-bottom: 10px;
 }
 
 .success-message {
-  color: green;
+  color: #2e7d32;
+  text-align: center;
   margin-bottom: 10px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
