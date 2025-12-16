@@ -7,7 +7,7 @@ export default function ListaAnoLetivo() {
   const [error, setError] = useState<string | null>(null);
   // anoEditar  modalAberto
   const [ setAnoEditar] = useState<any | null>(null);
-  const [setModalAberto] = useState(false);
+  //const [setModalAberto] = useState(false);
 
   const [fAno, setFAno] = useState("");
   const [ordemAsc, setOrdemAsc] = useState<boolean | null>(null);
