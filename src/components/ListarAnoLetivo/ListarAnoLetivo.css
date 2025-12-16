@@ -1,0 +1,53 @@
+.lista-anos-wrapper {
+  padding: 20px;
+}
+
+.lista-anos-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.lista-anos-table th,
+.lista-anos-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.lista-anos-table th {
+  background-color: #001f3f;
+  color: #fff;
+}
+
+.acoes {
+  text-align: center !important;
+}
+
+.error-message {
+  color: #ff4d4f;
+  margin-bottom: 10px;
+}
+
+.filtros-anos {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.filtros-anos input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.BuscaAno:focus {
+  border-color: #1e3a8a;
+  background-color: #ffffff;
+  outline: none;
+}
+
+.ListarAnoLetivo{
+    width: 80%;
+}

@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Sidebar.css';
-import logo from '../../images/logoPaz.avif';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Sidebar.css";
+import logo from "../../images/logoPaz.avif";
 
 interface SidebarProps {
   activeMenu?: string;
@@ -22,25 +22,25 @@ export default function Sidebar({
   const toggleMenu = (menu: string) => {
     if (menuAberto === menu) {
       setMenuAberto(null);
-      onSelectMenu('');
-      onSelectSubmenu('');
+      onSelectMenu("");
+      onSelectSubmenu("");
     } else {
       setMenuAberto(menu);
       onSelectMenu(menu);
-      onSelectSubmenu('');
+      onSelectSubmenu("");
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/');
+    localStorage.removeItem("token");
+    navigate("/");
   };
 
   const handleLogoClick = () => {
-    onSelectMenu('');
-    onSelectSubmenu('');
+    onSelectMenu("");
+    onSelectSubmenu("");
     setMenuAberto(null);
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   return (
@@ -48,79 +48,151 @@ export default function Sidebar({
       <div
         className="logo-section"
         onClick={handleLogoClick}
-        style={{ cursor: 'pointer' }}
-        title="Voltar ao Dashboard"
+        style={{ cursor: "pointer" }}
       >
         <img src={logo} className="logo" alt="Logo da Escola" />
       </div>
 
       <nav className="menu">
 
+        {/* USUÁRIOS */}
         <a
           href="#"
-          className={activeMenu === 'usuario' ? 'active' : ''}
-          onClick={(e) => { e.preventDefault(); toggleMenu('usuario'); }}
+          className={activeMenu === "usuario" ? "active" : ""}
+          onClick={(e) => {
+            e.preventDefault();
+            toggleMenu("usuario");
+          }}
         >
-          👤 Usuário
+          👤 Usuários
         </a>
-        <div className={`submenu ${menuAberto === 'usuario' ? 'submenu-visible' : ''}`}>
+
+        <div className={`submenu ${menuAberto === "usuario" ? "submenu-visible" : ""}`}>
           <a
             href="#"
-            className={activeSubmenu === 'cadastrar' ? 'active' : ''}
-            onClick={(e) => { e.preventDefault(); onSelectMenu('usuario'); onSelectSubmenu('cadastrar'); }}
+            className={activeSubmenu === "cadastrar" ? "active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              onSelectMenu("usuario");
+              onSelectSubmenu("cadastrar");
+            }}
           >
             Cadastrar Usuário
           </a>
 
           <a
             href="#"
-            className={activeSubmenu === 'listar' ? 'active' : ''}
-            onClick={(e) => { e.preventDefault(); onSelectMenu('usuario'); onSelectSubmenu('listar'); }}
+            className={activeSubmenu === "listar" ? "active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              onSelectMenu("usuario");
+              onSelectSubmenu("listar");
+            }}
           >
             Listar Usuários
           </a>
         </div>
 
+        {/* ESCOLAS */}
         <a
           href="#"
-          className={activeMenu === 'escolas' ? 'active' : ''}
-          onClick={(e) => { e.preventDefault(); toggleMenu('escolas'); }}
+          className={activeMenu === "escolas" ? "active" : ""}
+          onClick={(e) => {
+            e.preventDefault();
+            toggleMenu("escolas");
+          }}
         >
           🏫 Escolas
         </a>
-        <div className={`submenu ${menuAberto === 'escolas' ? 'submenu-visible' : ''}`}>
+
+        <div className={`submenu ${menuAberto === "escolas" ? "submenu-visible" : ""}`}>
           <a
             href="#"
-            className={activeSubmenu === 'cadastrar_escola' ? 'active' : ''}
-            onClick={(e) => { e.preventDefault(); onSelectMenu('escolas'); onSelectSubmenu('cadastrar_escola'); }}
+            className={activeSubmenu === "cadastrar_escola" ? "active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              onSelectMenu("escolas");
+              onSelectSubmenu("cadastrar_escola");
+            }}
           >
             Cadastrar Escola
           </a>
 
           <a
             href="#"
-            className={activeSubmenu === 'listar_escolas' ? 'active' : ''}
-            onClick={(e) => { e.preventDefault(); onSelectMenu('escolas'); onSelectSubmenu('listar_escolas'); }}
+            className={activeSubmenu === "listar_escolas" ? "active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              onSelectMenu("escolas");
+              onSelectSubmenu("listar_escolas");
+            }}
           >
             Listar Escolas
           </a>
         </div>
 
+        {/* ANO LETIVO */}
         <a
           href="#"
-          className={activeMenu === 'configuracoes' ? 'active' : ''}
-          onClick={(e) => { e.preventDefault(); toggleMenu('configuracoes'); }}
+          className={activeMenu === "ano" ? "active" : ""}
+          onClick={(e) => {
+            e.preventDefault();
+            toggleMenu("ano");
+          }}
+        >
+          📅 Ano Letivo
+        </a>
+
+        <div className={`submenu ${menuAberto === "ano" ? "submenu-visible" : ""}`}>
+          <a
+            href="#"
+            className={activeSubmenu === "cadastrar_ano" ? "active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              onSelectMenu("ano");
+              onSelectSubmenu("cadastrar_ano");
+            }}
+          >
+            Cadastrar Ano
+          </a>
+
+          <a
+            href="#"
+            className={activeSubmenu === "listar_ano" ? "active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              onSelectMenu("ano");
+              onSelectSubmenu("listar_ano");
+            }}
+          >
+            Listar Anos
+          </a>
+        </div>
+
+        {/* CONFIGURAÇÕES */}
+        <a
+          href="#"
+          className={activeMenu === "configuracoes" ? "active" : ""}
+          onClick={(e) => {
+            e.preventDefault();
+            toggleMenu("configuracoes");
+          }}
         >
           ⚙️ Configurações
         </a>
-        <div className={`submenu ${menuAberto === 'configuracoes' ? 'submenu-visible' : ''}`}>
+
+        <div className={`submenu ${menuAberto === "configuracoes" ? "submenu-visible" : ""}`}>
           <a
             href="#"
-            onClick={(e) => { e.preventDefault(); handleLogout(); }}
+            onClick={(e) => {
+              e.preventDefault();
+              handleLogout();
+            }}
           >
             🚪 Sair
           </a>
         </div>
+
       </nav>
     </aside>
   );

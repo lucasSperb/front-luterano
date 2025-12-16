@@ -4,6 +4,8 @@ import CadastraUsuario from "../cadastraUsuario/CadastraUsuario";
 import ListaUsuario from "../listaUsuario/ListaUsuario";
 import CadastraEscola from "../cadastraEscola/CadastraEscola";
 import ListaEscolas from "../listaEscolas/ListaEscolas";
+import CadastrarAnoLetivo from "../cadastrarAnoLetivo/CadastrarAnoLetivo";
+import ListarAnoLetivo from "../ListarAnoLetivo/ListarAnoLetivo";
 import "./Dashboard.css";
 
 export default function Dashboard() {
@@ -37,6 +39,18 @@ export default function Dashboard() {
       return null;
     }
 
+    if (activeMenu === "ano") {
+      switch (activeSubmenu) {
+        case "cadastrar_ano":
+          return <CadastrarAnoLetivo onCadastrado={() => {}} />;
+
+        case "listar_ano":
+          return <ListarAnoLetivo />;
+
+        default:
+          return null;
+      }
+    }
     return null;
   };
 
