@@ -5,9 +5,9 @@ export default function ListaAnoLetivo() {
   const [anos, setAnos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const [anoEditar, setAnoEditar] = useState<any | null>(null);
-  const [modalAberto, setModalAberto] = useState(false);
+  // anoEditar  modalAberto
+  const [ setAnoEditar] = useState<any | null>(null);
+  const [setModalAberto] = useState(false);
 
   const [fAno, setFAno] = useState("");
   const [ordemAsc, setOrdemAsc] = useState<boolean | null>(null);
@@ -105,7 +105,7 @@ export default function ListaAnoLetivo() {
                     className="btn-editar ListarAnoLetivo"
                     onClick={() => {
                       setAnoEditar(a);
-                      setModalAberto(true);
+                      //setModalAberto(true);
                     }}
                   >
                     ✏️
