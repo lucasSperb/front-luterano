@@ -119,3 +119,45 @@
   color: #ff4d4f;
   margin-bottom: 10px;
 }
+
+.select-custom {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.select-custom:hover {
+  border-color: #1e3a8a;
+}
+
+.select-options {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #fff;
+}
+
+.select-option {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.select-option:hover {
+  background-color: #f1f5f9;
+}
+
+.arrow {
+  font-size: 12px;
+}
+
+.select-option:hover {
+  background-color: #1e3a8a; /* azul do tema */
+  color: #ffffff;
+}

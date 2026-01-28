@@ -1,13 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./CadastrarAnoLetivo.css";
 
-export default function CadastrarAnoLetivo({ onCadastrado }: { onCadastrado: () => void }) {
+export default function CadastrarAnoLetivo({
+  onCadastrado,
+}: {
+  onCadastrado: () => void;
+}) {
   const [ano, setAno] = useState("");
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
 
+  const [escolas, setEscolas] = useState<any[]>([]);
+  const [escolaSelecionada, setEscolaSelecionada] = useState<any | null>(null);
+  const [selectAberto, setSelectAberto] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    fetch(`${import.meta.env.VITE_API_URL}/api/escolas`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then(setEscolas)
+      .catch(() => alert("Erro ao carregar escolas"));
+  }, []);
+
   const cadastrarAno = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!escolaSelecionada) {
+      alert("Selecione uma escola.");
+      return;
+    }
 
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -22,6 +47,7 @@ export default function CadastrarAnoLetivo({ onCadastrado }: { onCadastrado: () 
         ano,
         dataInicio,
         dataFim,
+        escolaId: escolaSelecionada.id,
       }),
     });
 
@@ -34,6 +60,7 @@ export default function CadastrarAnoLetivo({ onCadastrado }: { onCadastrado: () 
     setAno("");
     setDataInicio("");
     setDataFim("");
+    setEscolaSelecionada(null);
     onCadastrado();
   };
 
@@ -71,6 +98,35 @@ export default function CadastrarAnoLetivo({ onCadastrado }: { onCadastrado: () 
               onChange={(e) => setDataFim(e.target.value)}
               required
             />
+          </div>
+
+          <div className="input-group">
+            <label>Escola</label>
+
+            <div
+              className="select-custom"
+              onClick={() => setSelectAberto(!selectAberto)}
+            >
+              {escolaSelecionada ? escolaSelecionada.nome : "Selecione uma escola"}
+              <span className="arrow">{selectAberto ? "▲" : "▼"}</span>
+            </div>
+
+            {selectAberto && (
+              <div className="select-options">
+                {escolas.map((e) => (
+                  <div
+                    key={e.id}
+                    className="select-option"
+                    onClick={() => {
+                      setEscolaSelecionada(e);
+                      setSelectAberto(false);
+                    }}
+                  >
+                    {e.nome}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <button className="btn-primary">Cadastrar</button>
