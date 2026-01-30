@@ -4,17 +4,30 @@ import "./ListarAnoLetivo.css";
 export default function ListaAnoLetivo() {
   const [anos, setAnos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState<string | null>(null);
-  // anoEditar  modalAberto
-  const [ setAnoEditar] = useState<any | null>(null);
-  //const [setModalAberto] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  const [anoEditar, setAnoEditar] = useState<any | null>(null);
+  const [modalEditarAberto, setModalEditarAberto] = useState(false);
+
+  const [modalDeleteAberto, setModalDeleteAberto] = useState(false);
+  const [idParaExcluir, setIdParaExcluir] = useState<number | null>(null);
 
   const [fAno, setFAno] = useState("");
   const [ordemAsc, setOrdemAsc] = useState<boolean | null>(null);
 
+  const limparMensagens = () => {
+    setError(null);
+    setSuccess(null);
+  };
+
   const fetchAnos = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
+
+    setLoading(true);
+    limparMensagens();
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/ano`, {
@@ -54,6 +67,68 @@ export default function ListaAnoLetivo() {
   const formatarData = (data: string) =>
     new Date(data).toLocaleDateString("pt-BR");
 
+  const salvarEdicao = async () => {
+    if (!anoEditar) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    limparMensagens();
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/ano/${anoEditar.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(anoEditar),
+        }
+      );
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.erro || "Erro ao atualizar ano.");
+
+      setSuccess("Ano letivo atualizado com sucesso.");
+      setModalEditarAberto(false);
+      setAnoEditar(null);
+      fetchAnos();
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  const confirmarDelete = async () => {
+    if (!idParaExcluir) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    limparMensagens();
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/ano/${idParaExcluir}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.erro || "Erro ao excluir ano.");
+
+      setSuccess("Ano letivo excluído com sucesso.");
+      setModalDeleteAberto(false);
+      setIdParaExcluir(null);
+      fetchAnos();
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="lista-anos-wrapper">
       <div className="filtros-anos">
@@ -65,10 +140,11 @@ export default function ListaAnoLetivo() {
         />
       </div>
 
-      {loading && <p>Carregando...</p>}
       {error && <p className="error-message">{error}</p>}
+      {success && <p className="success-message">{success}</p>}
+      {loading && <p>Carregando...</p>}
 
-      {!loading && !error && (
+      {!loading && (
         <table className="lista-anos-table">
           <thead>
             <tr>
@@ -87,32 +163,33 @@ export default function ListaAnoLetivo() {
               <tr key={a.id}>
                 <td>{a.ano}</td>
                 <td>
-                  {a.ativo ? (
-                    <span style={{ color: "green", fontWeight: 600 }}>
-                      Ativo
-                    </span>
-                  ) : (
-                    <span style={{ color: "red", fontWeight: 600 }}>
-                      Inativo
-                    </span>
-                  )}
+                  <span
+                    style={{
+                      color: a.ativo ? "green" : "red",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {a.ativo ? "Ativo" : "Inativo"}
+                  </span>
                 </td>
                 <td>{formatarData(a.dataInicio)}</td>
                 <td>{formatarData(a.dataFim)}</td>
                 <td className="acoes">
                   <button
-                    
-                    className="btn-editar ListarAnoLetivo"
+                    className="btn-editar-pequeno"
                     onClick={() => {
                       setAnoEditar(a);
-                      //setModalAberto(true);
+                      setModalEditarAberto(true);
                     }}
                   >
                     ✏️
                   </button>
                   <button
-                    className="btn-deletar ListarAnoLetivo"
-                    onClick={() => alert("Implementar delete")}
+                    className="btn-deletar-pequeno"
+                    onClick={() => {
+                      setIdParaExcluir(a.id);
+                      setModalDeleteAberto(true);
+                    }}
                   >
                     🗑️
                   </button>
@@ -121,6 +198,88 @@ export default function ListaAnoLetivo() {
             ))}
           </tbody>
         </table>
+      )}
+
+      {/* MODAL EDITAR */}
+      {modalEditarAberto && anoEditar && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Editar Ano Letivo</h3>
+
+            <div className="input-group">
+              <label>Ano</label>
+              <input
+                type="number"
+                value={anoEditar.ano}
+                onChange={(e) =>
+                  setAnoEditar({ ...anoEditar, ano: Number(e.target.value) })
+                }
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Data Início</label>
+              <input
+                type="date"
+                value={anoEditar.dataInicio.slice(0, 10)}
+                onChange={(e) =>
+                  setAnoEditar({ ...anoEditar, dataInicio: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Data Fim</label>
+              <input
+                type="date"
+                value={anoEditar.dataFim.slice(0, 10)}
+                onChange={(e) =>
+                  setAnoEditar({ ...anoEditar, dataFim: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="modal-buttons">
+              <button className="btn-primary" onClick={salvarEdicao}>
+                Salvar
+              </button>
+              <button
+                className="btn-secondary"
+                onClick={() => {
+                  setModalEditarAberto(false);
+                  setAnoEditar(null);
+                }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DELETE */}
+      {modalDeleteAberto && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Confirmar exclusão</h3>
+            <p>Deseja realmente excluir este ano letivo?</p>
+
+            <div className="modal-buttons">
+              <button className="btn-danger" onClick={confirmarDelete}>
+                Excluir
+              </button>
+              <button
+                className="btn-secondary"
+                onClick={() => {
+                  setModalDeleteAberto(false);
+                  setIdParaExcluir(null);
+                }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

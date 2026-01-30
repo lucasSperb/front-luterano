@@ -51,3 +51,13 @@
 .ListarAnoLetivo{
     width: 80%;
 }
+
+.btn-deletar-pequeno{
+  width: 60%;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  border: 1px solid #004080;
+  background-color: #004080;
+  cursor: pointer;
+}
