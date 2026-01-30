@@ -6,6 +6,7 @@ import CadastraEscola from "../cadastraEscola/CadastraEscola";
 import ListaEscolas from "../listaEscolas/ListaEscolas";
 import CadastrarAnoLetivo from "../cadastrarAnoLetivo/CadastrarAnoLetivo";
 import ListarAnoLetivo from "../ListarAnoLetivo/ListarAnoLetivo";
+import ResumoDashboard from "../resumoDashboard/ResumoDashboard";
 import "./Dashboard.css";
 
 export default function Dashboard() {
@@ -13,6 +14,10 @@ export default function Dashboard() {
   const [activeSubmenu, setActiveSubmenu] = useState<string>("");
 
   const renderContent = () => {
+    if (!activeMenu) {
+      return <ResumoDashboard />;
+    }
+
     if (activeMenu === "usuario") {
       switch (activeSubmenu) {
         case "cadastrar":
@@ -35,22 +40,17 @@ export default function Dashboard() {
       }
     }
 
-    if (activeMenu === "configuracoes") {
-      return null;
-    }
-
     if (activeMenu === "ano") {
       switch (activeSubmenu) {
         case "cadastrar_ano":
           return <CadastrarAnoLetivo onCadastrado={() => {}} />;
-
         case "listar_ano":
           return <ListarAnoLetivo />;
-
         default:
           return null;
       }
     }
+
     return null;
   };
 
