@@ -14,6 +14,10 @@ export default function CadastrarAnoLetivo({
   const [escolaSelecionada, setEscolaSelecionada] = useState<any | null>(null);
   const [selectAberto, setSelectAberto] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -23,45 +27,65 @@ export default function CadastrarAnoLetivo({
     })
       .then((res) => res.json())
       .then(setEscolas)
-      .catch(() => alert("Erro ao carregar escolas"));
+      .catch(() => setError("Erro ao carregar escolas."));
   }, []);
 
   const cadastrarAno = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
 
     if (!escolaSelecionada) {
-      alert("Selecione uma escola.");
+      setError("Selecione uma escola.");
+      return;
+    }
+
+    if (new Date(dataFim) < new Date(dataInicio)) {
+      setError("A data final não pode ser menor que a data inicial.");
       return;
     }
 
     const token = localStorage.getItem("token");
-    if (!token) return;
-
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/ano`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        ano,
-        dataInicio,
-        dataFim,
-        escolaId: escolaSelecionada.id,
-      }),
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      alert(data?.erro || "Erro ao cadastrar ano letivo.");
+    if (!token) {
+      setError("Você precisa estar logado.");
       return;
     }
 
-    setAno("");
-    setDataInicio("");
-    setDataFim("");
-    setEscolaSelecionada(null);
-    onCadastrado();
+    setLoading(true);
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/ano`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ano: Number(ano),
+          dataInicio: new Date(dataInicio).toISOString(),
+          dataFim: new Date(dataFim).toISOString(),
+          escolaId: escolaSelecionada.id,
+        }),
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        throw new Error(data?.erro || "Erro ao cadastrar ano letivo.");
+      }
+
+      setSuccess("Ano letivo cadastrado com sucesso!");
+      setAno("");
+      setDataInicio("");
+      setDataFim("");
+      setEscolaSelecionada(null);
+      setSelectAberto(false);
+      onCadastrado();
+    } catch (err: any) {
+      setError(err.message || "Erro inesperado.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -69,13 +93,17 @@ export default function CadastrarAnoLetivo({
       <div className="card-cadastro">
         <h3>Cadastrar Ano Letivo</h3>
 
+        {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">{success}</p>}
+
         <form onSubmit={cadastrarAno}>
           <div className="input-group">
             <label>Ano</label>
             <input
-              type="text"
+              type="number"
               value={ano}
               onChange={(e) => setAno(e.target.value)}
+              placeholder="Ex: 2027"
               required
             />
           </div>
@@ -129,7 +157,9 @@ export default function CadastrarAnoLetivo({
             )}
           </div>
 
-          <button className="btn-primary">Cadastrar</button>
+          <button className="btn-primary" disabled={loading}>
+            {loading ? "Cadastrando..." : "Cadastrar"}
+          </button>
         </form>
       </div>
     </div>
